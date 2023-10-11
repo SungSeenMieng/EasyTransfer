@@ -1,0 +1,62 @@
+﻿<Window x:Class="EasyTransfer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Icon="/Resources/easy_transfer.ico"
+        WindowStartupLocation="CenterScreen"
+        xmlns:local="clr-namespace:EasyTransfer" xmlns:component="clr-namespace:EasyTransfer.Component"
+        mc:Ignorable="d" Style="{StaticResource WindowBaseStyleWithScaleAnimation}"
+        Title="EasyTransfer" Height="750" Width="1300">
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <component:PathBrowser IsRemote="False" Transfer="{Binding UploadCommand}" 
+                                   PathChanged="{Binding LocalPathCommand}"
+                                   RefreshAction="{Binding LocalRefreshCommand}"
+                                   />
+            <component:PathBrowser Grid.Column="1" IsRemote="True" Transfer="{Binding DownloadCommand}"
+                                   Connected="{Binding ConnectedCommand}" PathChanged="{Binding RemotePathCommand}"
+                                   Response="{Binding ResponseCommand}"
+                                   RefreshAction="{Binding RemoteRefreshCommand}"
+                                   RequestConnectCommand="{Binding RequestConnectCommand}"
+                                   ConnectCommand="{Binding ConnectCommand}"/>
+        </Grid>
+        <ScrollViewer Grid.Row="3">
+        <ItemsControl ItemsSource="{Binding Missions}" Margin="9,3">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Height="24">
+                        <StackPanel Orientation="Horizontal" Margin="0,2">
+                            <TextBlock Width="300" Foreground="White" Text="{Binding Name}"/>
+                            <ProgressBar Width="100" Maximum="{Binding Max}" Value="{Binding Value}"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        </ScrollViewer>
+        <TextBlock Foreground="White" Grid.Row="4" Margin="9,0" VerticalAlignment="Center" Text="{Binding ServiceInfo}"/>
+        <Grid Grid.RowSpan="4" Grid.Row="1" Background="#33333333" Visibility="{Binding IsConnecting,Converter={StaticResource Boolean2VisibilityConverter}}">
+            <Border CornerRadius="10" Width="350" Height="200" Background="White">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="本地验证码" HorizontalAlignment="Center" Margin="0,10"/>
+                    <TextBlock Text="{Binding Code}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,148 @@
+﻿syntax = "proto3";
+option csharp_namespace = "EasyTransfer.Core";
+package EasyTransfer;
+
+enum PathType
+{
+	File = 0;
+	Folder = 1;
+	Driver = 2;
+}
+message PathInfo
+{
+	PathType Type = 1;
+	string DisplayName = 2;
+	string FullPath = 3;
+	string CreateTime = 4;
+	string ModifyTime = 5;
+	string Size = 6;
+}
+
+
+message ConnectRequest
+{
+	string Code = 1;
+}
+message BrowseRequest
+{
+	string Path = 1;
+}
+message UploadRequest
+{
+	string Path = 1;
+	string FileName = 2;
+	int64 FileSize = 3;
+}
+message UploadDataRequest
+{
+	string Path = 1;
+	string FileName = 2;
+	int64 FileSize = 3;
+	int64 WriteSize = 4;
+	int32 Index = 5;
+	bytes Data = 6;
+}
+message DeleteRequest
+{
+	string Path = 1;
+}
+message UploadDoneRequest
+{
+	string Path = 1;
+	string FileName = 2;
+	int64 FileSize = 3;
+}
+message DownloadRequest
+{
+	string Path = 1;
+}
+
+
+
+message ETRequest
+{
+	oneof Request{
+		ConnectRequest Connect = 1;
+		BrowseRequest Browse = 2;
+		UploadRequest Upload = 3;
+		UploadDataRequest UploadData = 4;
+		UploadDoneRequest UploadDone = 5;
+		DownloadRequest Download = 6;
+		DeleteRequest Delete = 7;
+	}
+}
+enum OS
+{
+	WINDOWS = 0;
+	LINUX = 1;
+}
+message ConnectResponse
+{
+	bool Accept = 1;
+	OS OS = 2;
+}
+message BrowseResponse
+{
+	string Path = 1;
+	repeated PathInfo PathItems = 2;
+}
+enum TransferState
+{
+	Start = 0;
+	Transfer = 1;
+	End = 2;
+}
+message UploadResponse
+{
+	TransferState State = 1;
+	bool IsSuccess = 2;
+}
+
+message DownloadMissionItem
+{
+	string FileName = 1;
+	int64 FileSize = 2;
+}
+
+message DownloadMissionResponse
+{
+	repeated DownloadMissionItem Files = 1;
+}
+
+message DownloadResponse
+{
+	string FileName = 2;
+	int64 FileSize = 3;
+}
+message DownloadDataResponse
+{
+	string FileName = 2;
+	int64 FileSize = 3;
+	int64 WriteSize = 4;
+	int32 Index = 5;
+	bytes Data = 6;
+}
+message DownloadDoneResponse
+{
+	string FileName = 2;
+	int64 FileSize = 3;
+}
+message DeleteResponse
+{
+	bool Success = 1;
+	string Message = 2;
+}
+
+message ETResponse
+{
+	oneof Response{
+		ConnectResponse Connect = 1;
+		BrowseResponse Browse = 2;
+		UploadResponse Upload = 3;
+		DownloadMissionResponse Missions = 4;
+		DownloadResponse Download = 5;
+		DownloadDataResponse DownloadData = 6;
+		DownloadDoneResponse DownloadDone = 7;
+		DeleteResponse Delete = 8;
+	}
+}
